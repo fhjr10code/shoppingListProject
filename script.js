@@ -13,7 +13,7 @@ function displayItems() {
   checkUI();
 }
 
-// Function will add items from form to local storage
+// Function will add items to shopping list
 function onAddItemSubmit(e) {
   e.preventDefault();
 
@@ -33,6 +33,11 @@ function onAddItemSubmit(e) {
     itemToEdit.classList.remove('edit-mode');
     itemToEdit.remove();
     isEditMode = false;
+  } else {
+    if (checkIfItemExists(newItem)) {
+      alert('That item already exists!');
+      return;
+    }
   }
 
   // Create item DOM element
@@ -58,6 +63,12 @@ function createIcon(classes) {
   const icon = document.createElement('i');
   icon.className = classes;
   return icon;
+}
+
+// Function will check if item is already is in list and return a boolean
+function checkIfItemExists(item) {
+  const itemsFromStorage = getItemsFromStorage();
+  return itemsFromStorage.includes(item);
 }
 
 // Create a function that will add items to the DOM
