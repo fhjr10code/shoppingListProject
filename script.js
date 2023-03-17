@@ -1,6 +1,7 @@
 const itemForm = document.getElementById('item-form');
 const itemInput = document.getElementById('item-input');
 const itemList = document.getElementById('item-list');
+const itemFilter = document.getElementById('filter');
 const clearBtn = document.getElementById('clear');
 
 function addItem(e) {
@@ -35,6 +36,8 @@ function addItem(e) {
 
   itemList.appendChild(li);
 
+  checkUI();
+
   itemInput.value = '';
 }
 
@@ -57,15 +60,49 @@ function removeItem(e) {
   if (e.target.parentElement.classList.contains('remove-item')) {
     if (confirm('Are you sure?')) {
       e.target.parentElement.parentElement.remove();
+
+      checkUI();
     }
   }
 }
 
+// Create a clearItems function
 function clearItems() {
   if (confirm('Are you sure?')) {
     while (itemList.firstChild) {
       itemList.removeChild(itemList.firstChild);
+
+      checkUI();
     }
+  }
+}
+
+// Create a function that will filter the items in the shopping list
+function filterItems(e) {
+  const items = itemList.querySelectorAll('li');
+  const text = e.target.value.toLowerCase();
+
+  items.forEach((item) => {
+    const itemName = item.firstChild.textContent.toLowerCase();
+
+    if (itemName.indexOf(text) != -1) {
+      item.style.display = 'flex';
+    } else {
+      item.style.display = 'none';
+    }
+  });
+}
+
+// Create a function that checks if there any items to display
+function checkUI() {
+  const items = itemList.querySelectorAll('li');
+
+  if (items.length === 0) {
+    clearBtn.style.display = 'none';
+    itemFilter.style.display = 'none';
+  } else {
+    clearBtn.style.display = 'block';
+    itemFilter.style.display = 'block';
   }
 }
 
@@ -73,3 +110,6 @@ function clearItems() {
 itemForm.addEventListener('submit', addItem);
 itemList.addEventListener('click', removeItem);
 clearBtn.addEventListener('click', clearItems);
+itemFilter.addEventListener('input', filterItems);
+
+checkUI();
